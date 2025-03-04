@@ -1,0 +1,69 @@
+/* 全体のスタイル */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 400px;
+    margin: auto;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+/* タイトル */
+h1 {
+    color: #333;
+}
+
+/* フォームのスタイル */
+form {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* TODOリストのスタイル */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: white;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 削除ボタン */
+form button {
+    background-color: #dc3545;
+}
+
+form button:hover {
+    background-color: #c82333;
+}
+
+/* 完了したTODO（グレーアウト＋取り消し線） */
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODOリスト</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>TODOリスト</h1>
+
+    <!-- TODOの追加フォーム -->
+    <form action="/add" method="POST">
+        <input type="text" name="text" placeholder="新しいTODOを追加" required>
+        <button type="submit">追加</button>
+    </form>
+
+    <!-- TODOリストの表示 -->
+
+<ul>
+    <% todos.forEach(todo => { %>
+        <li class="<%= todo.done ? 'completed' : '' %>">
+            <%= todo.text %>
+
+            <!-- 完了ボタン -->
+            <form action="/toggle" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= todo.id %>">
+                <button type="submit">
+                    <%= todo.done ? "未完了にする" : "完了" %>
+                </button>
+            </form>
+
+            <!-- 削除ボタン -->
+            <form action="/delete" method="POST" style="display:inline;">
+                <input type="hidden" name="id" value="<%= todo.id %>">
+                <button type="submit">削除</button>
+            </form>
+        </li>
+    <% }); %>
+</ul>
+
+
+</body>
+</html>
