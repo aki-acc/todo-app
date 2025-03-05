@@ -1,54 +1,47 @@
 const db = require("../db");
 
-// TODOリストを取得する関数（データベースから取得）
 function getTodos(callback) {
-    db.all("SELECT * FROM todos", (err, rows) => {
-        if (err) {
-            console.error("データ取得エラー:", err);
-            callback([]);
-        } else {
-            callback(rows);
-        }
-    });
+    try {
+        const rows = db.prepare("SELECT * FROM todos").all(); // ✅ 修正
+        callback(rows);
+    } catch (err) {
+        console.error("データ取得エラー:", err);
+        callback([]);
+    }
 }
 
-// 新しいTODOを追加する関数（データベースに保存）
 function addTodo(text, callback) {
-    db.run("INSERT INTO todos (text, done) VALUES (?, ?)", [text, 0], (err) => {
-        if (err) {
-            console.error("TODO追加エラー:", err);
-        }
+    try {
+        db.prepare("INSERT INTO todos (text, done) VALUES (?, ?)").run(text, 0);
         callback();
-    });
+    } catch (err) {
+        console.error("TODO追加エラー:", err);
+        callback();
+    }
 }
 
-// TODOを削除する関数（データベースから削除）
 function deleteTodo(id, callback) {
-    db.run("DELETE FROM todos WHERE id = ?", [id], (err) => {
-        if (err) {
-            console.error("TODO削除エラー:", err);
-        }
+    try {
+        db.prepare("DELETE FROM todos WHERE id = ?").run(id);
         callback();
-    });
+    } catch (err) {
+        console.error("TODO削除エラー:", err);
+        callback();
+    }
 }
 
-// TODOを完了・未完了に切り替える関数（データベースを更新）
 function toggleTodo(id, callback) {
-    db.get("SELECT done FROM todos WHERE id = ?", [id], (err, row) => {
-        if (err) {
-            console.error("完了状態取得エラー:", err);
-            callback();
-            return;
+    try {
+        const row = db.prepare("SELECT done FROM todos WHERE id = ?").get(id);
+        if (row) {
+            const newDone = row.done ? 0 : 1;
+            db.prepare("UPDATE todos SET done = ? WHERE id = ?").run(newDone, id);
         }
-
-        const newDone = row.done ? 0 : 1; // 完了状態を反転
-        db.run("UPDATE todos SET done = ? WHERE id = ?", [newDone, id], (err) => {
-            if (err) {
-                console.error("完了状態変更エラー:", err);
-            }
-            callback();
-        });
-    });
+        callback();
+    } catch (err) {
+        console.error("完了状態変更エラー:", err);
+        callback();
+    }
 }
 
 module.exports = { getTodos, addTodo, deleteTodo, toggleTodo };
